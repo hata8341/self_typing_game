@@ -1,12 +1,12 @@
-import { defineStore } from "pinia";
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithPopup,
   onAuthStateChanged,
-  signOut,
   signInAnonymously,
+  signInWithPopup,
+  signOut,
 } from "firebase/auth";
+import { defineStore } from "pinia";
 
 const auth = getAuth();
 const originUser = auth.currentUser;
@@ -18,12 +18,19 @@ export const authStore = defineStore("auth", {
   }),
   getters: {
     isLoggedIn: (state) => state.currentUser !== null,
+    getDisplayname: (state) =>
+      state.currentUser?.displayName != null
+        ? state.currentUser?.displayName
+        : "ゲスト",
+    getUid: (state) =>
+      state.currentUser?.uid != null ? state.currentUser?.uid : "guest",
   },
   actions: {
     async login(): Promise<void> {
       try {
         const res = await signInWithPopup(auth, provider);
         this.$patch({ currentUser: res.user });
+        alert("ログインしました");
         // ルーティングを入れる
       } catch (err) {
         if (err instanceof Error) {
@@ -50,7 +57,7 @@ export const authStore = defineStore("auth", {
       return new Promise((resolve, reject) => {
         onAuthStateChanged(
           auth,
-          (user) => {
+          async (user) => {
             this.$patch({ currentUser: user });
             resolve(user);
           },
@@ -65,6 +72,7 @@ export const authStore = defineStore("auth", {
       try {
         const guest = await signInAnonymously(auth);
         this.$patch({ currentUser: guest.user });
+        alert("ログインしました");
         // ルーティングを入れる
       } catch (err) {
         if (err instanceof Error) {

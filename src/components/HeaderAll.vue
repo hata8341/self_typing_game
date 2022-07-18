@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import StopWatch from "./StopWatch.vue";
-import { soundStore } from "../stores/sound";
 import { storeToRefs } from "pinia";
 import { authStore } from "../stores/auth";
+import { soundStore } from "../stores/sound";
+import StopWatch from "./StopWatch.vue";
 
 const sound = soundStore();
 const auth = authStore();
@@ -21,13 +21,12 @@ auth.getAuthState();
       </RouterLink>
       <StopWatch v-show="$route.name == 'game'" />
       <div class="px-2 flex items-center">
-        <!-- <a href="" class="px-2">
-          <span
-            class="bg-gray-300 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
-            >BETA
-          </span>
-          Myページ
-        </a> -->
+        <span
+          class="bg-yellow-300 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded cursor-pointer"
+          v-show="isLoggedIn"
+        >
+          <RouterLink to="/myPage" class="px-2"> Myページ </RouterLink>
+        </span>
         <!-- 音量バー -->
         <div class="flex cursor-pointer mr-4">
           <div

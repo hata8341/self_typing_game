@@ -17,16 +17,19 @@ export const userStore = defineStore({
       return state.name;
     },
     getLang(state): string {
-      return state.lang;
+      return state.lang == "" ? "free" : state.lang;
     },
     getLevel(state): string {
-      return state.level;
+      return state.level == "" ? "free" : state.level;
     },
     getTime(state): number {
       return state.time;
     },
     getScore(state): number {
       return state.score;
+    },
+    getCodeMissTypes(state): Map<string, number> {
+      return state.codeMissTypes;
     },
     getMissCounts(state): any {
       const missCount = (key: string) => {

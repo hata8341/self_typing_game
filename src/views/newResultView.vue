@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { timerStore } from "../stores/timer";
 import { storeToRefs } from "pinia";
-import { codeStore } from "../stores/code";
-import { userStore } from "../stores/user";
 import { onMounted } from "vue";
 import UsKeyboard from "../components/UsKeyboard.vue";
+import { codeStore } from "../stores/code";
+import { recordStore } from "../stores/record";
+import { timerStore } from "../stores/timer";
+import { userStore } from "../stores/user";
 
 const user = userStore();
 const code = codeStore();
 const timer = timerStore();
+const record = recordStore();
 const { getMinString, getSecString, getPointMsec } = storeToRefs(timer);
 const { getMissCount, getSuccessPer } = storeToRefs(code);
 const { lang, level } = storeToRefs(user);
@@ -51,6 +53,9 @@ function makeItRed(): void {
     }
   });
 }
+onMounted(async () => {
+  await record.saveRecord();
+});
 </script>
 
 <template>
