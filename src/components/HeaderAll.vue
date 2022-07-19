@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
 import { authStore } from "../stores/auth";
 import { soundStore } from "../stores/sound";
 import StopWatch from "./StopWatch.vue";
@@ -11,6 +12,12 @@ const { getMuteStatus, vol } = storeToRefs(sound);
 const { currentUser, isLoggedIn } = storeToRefs(auth);
 
 auth.getAuthState();
+
+const router = useRouter();
+router.currentRoute.value.path;
+const reset = () => {
+  router.push({ path: router.currentRoute.value.path, force: true });
+};
 </script>
 
 <template>

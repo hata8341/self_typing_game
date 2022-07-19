@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import UsKeyboard from "../components/UsKeyboard.vue";
 import { authStore } from "../stores/auth";
 import { recordStore } from "../stores/record";
@@ -9,7 +9,7 @@ const auth = authStore();
 auth.getAuthState();
 const { currentUser, getDisplayname } = storeToRefs(auth);
 
-// firebaseの個人プロジェクトとしての設定
+// eslint実行
 // .gitignoreの設定
 const useRecord = recordStore();
 const {
@@ -19,6 +19,13 @@ const {
   getSuccessPerAvg,
   getStars,
 } = storeToRefs(useRecord);
+
+const resetKey = ref<number>(0);
+// 連続して苦手キーを表示させると前の苦手キーと現在の苦手キーが重複を起こすため、再描画する
+const diplayCodeMissTypes = (codeMissTypes: Map<string, number>) => {
+  resetKey.value++;
+  useRecord.makeItRed(codeMissTypes);
+};
 
 onMounted(() => {
   useRecord.getDbRecords();
@@ -46,6 +53,19 @@ onMounted(() => {
             :src="String(currentUser?.photoURL)"
             alt=""
           />
+          <svg
+            v-show="currentUser?.displayName == null"
+            class="absolute w-32 h-32 text-gray-400 -left-1"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
         </div>
       </div>
       <div class="">
@@ -56,7 +76,7 @@ onMounted(() => {
           トータルプレイ回数：{{ getRecordsLength }} 回
         </h5>
         <h5 class="text-base font-semibold tracking-tight text-gray-900 mt-2">
-          成功率の平均:{{ getSuccessPerAvg }} %
+          正確率の平均:{{ getSuccessPerAvg }} %
         </h5>
         <div class="flex justify-center items-center mt-2.5 mb-5">
           <svg
@@ -129,7 +149,7 @@ onMounted(() => {
                 >
               </li>
               <li class="flex justify-around space-x-3 mt-2">
-                <div class="flex-shrink-0 w-20 h-5 text-blue-600">成功率</div>
+                <div class="flex-shrink-0 w-20 h-5 text-blue-600">正確率</div>
                 <span class="text-base font-normal leading-tight text-gray-500"
                   >{{
                     getRecordsLength == 0 ? "none" : getLatestRecord.successPer
@@ -178,7 +198,7 @@ onMounted(() => {
                   </td>
                   <td class="px-6 py-4 text-center">
                     <p
-                      @click="useRecord.makeItRed(record.codeMissTypes)"
+                      @click="diplayCodeMissTypes(record.codeMissTypes)"
                       class="font-medium text-blue-600 hover:underline cursor-pointer"
                     >
                       Display
@@ -193,7 +213,7 @@ onMounted(() => {
       <div
         class="right-bottom-container w-full h-2/4 flex justify-center items-center"
       >
-        <UsKeyboard />
+        <UsKeyboard :key="resetKey" />
       </div>
     </div>
   </div>

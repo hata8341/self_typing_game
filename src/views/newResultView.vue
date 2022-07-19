@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
 import UsKeyboard from "../components/UsKeyboard.vue";
 import { codeStore } from "../stores/code";
 import { recordStore } from "../stores/record";
@@ -13,11 +14,16 @@ const timer = timerStore();
 const record = recordStore();
 const { getMinString, getSecString, getPointMsec } = storeToRefs(timer);
 const { getMissCount, getSuccessPer } = storeToRefs(code);
-const { lang, level } = storeToRefs(user);
+const { getLang, getLevel } = storeToRefs(user);
 const { resetMisses, resetScore } = user;
-onMounted(() => {
+const resetKey = ref<number>(0);
+
+onMounted(async () => {
+  resetKey.value++;
+  await record.saveRecord();
   makeItRed();
 });
+
 let twitterShare = "";
 
 function hasLangLevel(): void {
@@ -53,8 +59,9 @@ function makeItRed(): void {
     }
   });
 }
-onMounted(async () => {
-  await record.saveRecord();
+
+onBeforeRouteLeave((to, from) => {
+  resetKey.value++;
 });
 </script>
 
@@ -71,14 +78,14 @@ onMounted(async () => {
           スコア: {{ user.score }}
         </div>
         <ol class="result-box text-center">
-          <li class="text-2xl mt-1">選択言語: {{ lang }}</li>
-          <li class="text-2xl mt-2">レベル: {{ level }}</li>
+          <li class="text-2xl mt-1">選択言語: {{ getLang }}</li>
+          <li class="text-2xl mt-2">レベル: {{ getLevel }}</li>
           <li class="text-2xl mt-2">
             時間: {{ getMinString }}:{{ getSecString }}:{{ getPointMsec }}
           </li>
           <li class="text-2xl mt-2">ミスタイプ数: {{ getMissCount }}</li>
           <li class="text-2xl mt-2">
-            成功率: {{ code.fullCode.length === 0 ? 0 : getSuccessPer + "%" }}
+            正確率: {{ code.fullCode.length === 0 ? 0 : getSuccessPer + "%" }}
           </li>
         </ol>
 
@@ -138,7 +145,7 @@ onMounted(async () => {
         <div class="flex mt-2 justify-center items-center">
           <!-- キーボード-->
           <div class="bottom-box bg-gray-200 rounded-lg border">
-            <UsKeyboard />
+            <UsKeyboard :key="resetKey" />
           </div>
           <!-- キーボード -->
         </div>

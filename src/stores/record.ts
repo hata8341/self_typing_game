@@ -148,6 +148,7 @@ export const recordStore = defineStore({
       try {
         const auth = authStore();
         const saveRecord = currRecord as object;
+        console.log("uuidは", auth.getUid);
         await addDoc(collection(db, `users/${auth.getUid}/records/`), {
           saveRecord,
         });
@@ -162,7 +163,8 @@ export const recordStore = defineStore({
         date.getMonth() + 1
       ).toString()}月${date.getDate().toString()}日`;
     },
-    makeItRed(codeMissTypes: Map<string, number>): void {
+    async makeItRed(codeMissTypes: Map<string, number>): Promise<void> {
+      await sleep(0.3);
       for (const [key, index] of Object.entries(codeMissTypes)) {
         if (index < 3) {
           document

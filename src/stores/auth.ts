@@ -23,15 +23,13 @@ export const authStore = defineStore("auth", {
         ? state.currentUser?.displayName
         : "ゲスト",
     getUid: (state) =>
-      state.currentUser?.uid != null ? state.currentUser?.uid : "guest",
+      state.currentUser?.displayName != null ? state.currentUser?.uid : "guest",
   },
   actions: {
     async login(): Promise<void> {
       try {
         const res = await signInWithPopup(auth, provider);
         this.$patch({ currentUser: res.user });
-        alert("ログインしました");
-        // ルーティングを入れる
       } catch (err) {
         if (err instanceof Error) {
           alert("適切なアカウントを選択してください");
@@ -43,7 +41,7 @@ export const authStore = defineStore("auth", {
     async logout(): Promise<void> {
       try {
         await signOut(auth);
-        this.$reset();
+        await this.$reset();
         // ルーティングを入れる
       } catch (err) {
         if (err instanceof Error) {
@@ -73,7 +71,6 @@ export const authStore = defineStore("auth", {
         const guest = await signInAnonymously(auth);
         this.$patch({ currentUser: guest.user });
         alert("ログインしました");
-        // ルーティングを入れる
       } catch (err) {
         if (err instanceof Error) {
           alert("ログインに失敗しました");

@@ -80,8 +80,14 @@ export const userStore = defineStore({
     setGameTrue(): void {
       this.canStartGame = true;
     },
+    resetGame(): void {
+      this.name = "";
+      this.lang = "";
+      this.level = "";
+    },
     resetMisses(): void {
       this.missTypes = new Map();
+      this.codeMissTypes = new Map<string, number>();
     },
     resetScore(): void {
       this.score = 100;

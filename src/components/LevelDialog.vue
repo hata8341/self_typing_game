@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { userStore } from "../stores/user";
-import { codeStore } from "../stores/code";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
+import { codeStore } from "../stores/code";
+import { userStore } from "../stores/user";
 
 defineProps<{
   showLevelDialog: boolean;
@@ -67,7 +67,7 @@ const goToGamePage = () => router.push("/game");
               </div>
             </div>
             <div
-              class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-around border-t border-gray-200 rounded-b-md"
+              class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-around"
             >
               <button
                 type="button"
