@@ -166,7 +166,6 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <!-- レベルと正確率を追加 -->
     <div
       class="right-container h-auto w-7/12 p-4 bg-white rounded-lg shadow-md"
     >
