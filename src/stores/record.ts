@@ -148,7 +148,6 @@ export const recordStore = defineStore({
       try {
         const auth = authStore();
         const saveRecord = currRecord as object;
-        console.log("uuidは", auth.getUid);
         await addDoc(collection(db, `users/${auth.getUid}/records/`), {
           saveRecord,
         });
