@@ -99,7 +99,7 @@ onMounted(() => {
       </div>
       <div class="flex flex-col items-center h-3/6">
         <div
-          class="bg-white border-t w-full flex flex-col justify-around items-center sm:h-[240px] sm:pt-2 sm:px-4"
+          class="bg-white border-t w-full flex flex-col justify-around items-center sm:h-[240px] md:h-[300px] sm:pt-2 sm:px-4"
         >
           <h5 class="mb-2 text-lg font-medium text-gray-500">
             最新のプレイ情報
