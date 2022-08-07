@@ -17,8 +17,10 @@ https://programming-lang-typing-game.netlify.app
 ## Project Setup
 
 ```sh
+git clone
 npm install
 ```
+
 
 ### Compile and Hot-Reload for Development
 
